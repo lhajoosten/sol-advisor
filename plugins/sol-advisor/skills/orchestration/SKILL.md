@@ -110,6 +110,32 @@ Do not type implementation code, tests, boilerplate, or mechanical configuration
 the primary session when a lane can do it. If a lane's result is wrong, correct the
 spec and delegate the fix rather than silently repairing it yourself.
 
+## Apply the repository-first fullstack contract
+
+Before writing an implementation packet, inspect the repository's AGENTS, CLAUDE,
+README, contribution, manifest, and Taskfile guidance that actually exists. Record the
+instruction files read and select existing Taskfile tasks before considering raw
+commands. Do not invent a stack component that the repository does not contain.
+
+When present, use these shared defaults:
+
+- Python 3.13 exactly for development, with uv, Ruff, ty, pytest, Import Linter,
+  FastAPI, async SQLAlchemy, PostgreSQL, and pgvector. Never introduce mypy,
+  basedpyright, Poetry, or synchronous database access.
+- pnpm workspaces with strict TypeScript, React, Oxfmt, Oxlint, Vite, Vitest,
+  happy-dom, Playwright, Storybook, Hey API, and Axios. Keep API calls in hooks and
+  never hand-edit generated clients.
+- Existing Docker Compose validation and repository Kubernetes validation only when
+  those manifests exist.
+- Router -> Service -> Repository/ORM -> DB for backend work; thin pages, API hooks,
+  and presentational components for frontend work.
+
+Classify every verification command. Run the smallest targeted checks after each
+change. Keep tests, builds, Playwright, Storybook, and aggregate CI tasks out of
+ordinary change loops unless the modified slice requires them. Run the broad gate
+only at an explicit pre-commit or final-verification boundary. A Taskfile that exists
+but is bypassed without a documented reason is missing verification evidence.
+
 ## Route implementation
 
 ### Luna: default routine lane
@@ -173,6 +199,10 @@ Treat worker reports as claims. Before accepting work:
 3. Rerun the spec's verification commands in the primary session.
 4. Compare the evidence with the stated objective and interfaces.
 5. Delegate corrections when evidence fails or the diff is wrong.
+
+Also verify that the report names the repository instructions it followed, uses
+existing Taskfile tasks where available, classifies each command as targeted or broad,
+and contains no prohibited Python tooling or hand-edited generated client.
 
 Do not call a task complete because a worker says it is complete.
 

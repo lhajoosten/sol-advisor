@@ -62,6 +62,9 @@ test -f "$contracts" || fail "role contracts missing: $contracts"
 jq empty "$manifest"
 pass "plugin manifest JSON is valid"
 
+[ "$(jq -r '.version' "$manifest")" = "0.3.0" ] || fail "plugin version must be 0.3.0"
+pass "plugin version is 0.3.0"
+
 python3 - "$templates" <<'PY'
 from pathlib import Path
 import sys
@@ -238,6 +241,21 @@ for document in "$skill" "$contracts"; do
     fail "per-spawn model or reasoning override remains in: $document"
   fi
 done
+
+for implementer in "$templates/sol-advisor-luna-implementer.toml" "$templates/sol-advisor-terra-implementer.toml"; do
+  grep -Fq 'Python 3.13' "$implementer" || fail "missing Python 3.13 requirement: $implementer"
+  grep -Fq 'Taskfile' "$implementer" || fail "missing Taskfile-first requirement: $implementer"
+  grep -Fq 'uv' "$implementer" || fail "missing uv requirement: $implementer"
+  grep -Fq 'Ruff' "$implementer" || fail "missing Ruff requirement: $implementer"
+  grep -Fq 'ty' "$implementer" || fail "missing ty requirement: $implementer"
+  grep -Fq 'Do not use mypy, basedpyright, or Poetry' "$implementer" || fail "missing prohibited Python tooling rule: $implementer"
+done
+grep -Fq 'actual Taskfile evidence' "$templates/sol-advisor-sol-reviewer.toml" || fail "reviewer does not require actual Taskfile evidence"
+grep -Fq 'mypy, basedpyright, or Poetry' "$templates/sol-advisor-sol-reviewer.toml" || fail "reviewer does not check prohibited Python tooling"
+grep -Fq 'targeted checks' "$skill" || fail "skill does not define targeted checks"
+grep -Fq 'broad gate' "$skill" || fail "skill does not define the broad gate boundary"
+grep -Fq 'targeted or broad' "$contracts" || fail "role contracts do not require gate classification"
+pass "fullstack tooling contract and targeted-versus-broad gates"
 grep -Fq '../../scripts/install-agents.sh' "$skill" || fail "skill does not resolve the companion installer relative to SKILL.md"
 grep -Fq '../../scripts/inspect-agent-runtime.sh' "$skill" || fail "skill does not resolve the runtime inspector relative to SKILL.md"
 grep -Fqi 'public native spawn/details metadata first' "$skill" || fail "skill does not require public runtime metadata first"

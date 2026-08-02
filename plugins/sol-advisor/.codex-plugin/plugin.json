@@ -1,7 +1,7 @@
 {
   "name": "sol-advisor",
-  "version": "0.2.0",
-  "description": "Codex-native architect workflow that routes through separately installed, role-pinned Luna and Terra custom agents and requires a fresh read-only Sol review.",
+  "version": "0.3.0",
+  "description": "Codex-native architect workflow with role-pinned implementation lanes, a repository-first fullstack tooling contract, and a fresh read-only Sol review.",
   "author": {
     "name": "Daniel McAteer",
     "url": "https://github.com/DannyMac180"

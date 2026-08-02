@@ -53,9 +53,13 @@ INTERFACES
 
 CONSTRAINTS
 - <Repository conventions, safety boundaries, excluded scope, and settled decisions.>
+- Repository instructions read: <exact AGENTS, CLAUDE, README, contribution, or manifest paths>.
+- Tooling: Python 3.13 with uv, Ruff, and ty only; no mypy, basedpyright, or Poetry.
+- Architecture and generation boundaries: <applicable backend/frontend rules and generated clients>.
 
 VERIFICATION
-- Run: <exact command>
+- Run: <existing Taskfile command, or documented reason no matching task exists>
+  Gate: targeted or broad
   Success: <concrete expected result>
 - Inspect: <exact file, diff, or generated artifact>
   Success: <concrete expected evidence>
@@ -68,7 +72,8 @@ IMPLEMENTATION REPORT
 STATUS: complete | partial | blocked
 OBJECTIVE: <one-line restatement>
 CHANGES: <file-by-file summary from the actual diff>
-VERIFIED: <exact commands plus concrete output evidence>
+VERIFIED: <exact Taskfile commands, targeted/broad classification, and concrete output evidence>
+TOOLING: <confirmation that prohibited Python tools and hand-edited generated clients were absent>
 JUDGMENT CALLS: <decisions the spec left open, or none>
 GAPS: <unfinished work, ambiguity, or none>
 ~~~
@@ -167,8 +172,9 @@ INTERFACES AND CONSTRAINTS
 - <Required compatibility, repository rules, safety boundaries, and excluded scope.>
 
 VERIFICATION EVIDENCE
-- <command> -> <actual primary-session output evidence>
+- <existing Taskfile command> -> <targeted or broad> -> <actual primary-session output evidence>
 - <Relevant artifact or diff inspection> -> <actual evidence>
+- <Prohibited-tool and generated-client check> -> <actual evidence>
 
 REVIEW
 Inspect the actual files and accumulated change set. Judge correctness, completeness,
@@ -187,6 +193,11 @@ Use fix-first for bounded required corrections. Use rethink when architecture or
 must change. If any fix is made after review, discard that verdict and run a new,
 fresh reviewer under the same observed-sandbox policy with a newly accumulated change
 set and verification evidence.
+
+When a Taskfile exists, missing actual Taskfile evidence is a fix-first finding unless
+the packet documents why no existing task matches. Reject Python work that uses a
+development version other than 3.13 or introduces mypy, basedpyright, or Poetry. Reject
+manual generated-client edits and unverified architecture-boundary violations.
 
 If the exact template preflight, native type exposure, or required role/model/effort
 observation fails, stop and report the limitation. Never silently fall back to another

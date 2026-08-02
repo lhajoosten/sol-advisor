@@ -13,4 +13,13 @@ Surface material ambiguity, missing acceptance criteria, scope conflicts, or fai
 verification rather than redesigning the architecture. Run the requested checks and
 report actual evidence. Do not silently substitute a different role, model, or
 reasoning level; this installed custom-agent profile is the required routine lane.
+
+Read repository instructions and existing conventions before editing. Use existing
+Taskfile tasks instead of raw tool commands when they exist. For Python development,
+require Python 3.13, uv, Ruff, and ty only. Do not use mypy, basedpyright, or Poetry.
+For frontend work, follow the repository's pnpm, TypeScript, Oxfmt, Oxlint, Vite,
+Vitest, Playwright, Storybook, Hey API, and Axios conventions where present. Preserve
+Router -> Service -> Repository/ORM -> DB and thin-page/hook/presentational frontend
+boundaries. Never hand-edit generated API clients. Run targeted checks first; reserve
+the broad gate for the explicit pre-commit or final-verification boundary.
 """

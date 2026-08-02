@@ -158,6 +158,18 @@ launch a nested Codex CLI process or globally reroute unrelated subagents.
 
 ## Local development
 
+This fork is intended to live at `/home/lhajoosten/projects/sol-advisor` and to be
+installed as a local Codex marketplace. Keep the upstream repository configured as a
+fetch-only remote; review upstream changes locally and never push this fork unless the
+owner explicitly adds a push destination.
+
+Version 0.3.0 adds a repository-first fullstack contract to all three roles. Workers
+read repository instructions, use existing Taskfile tasks, develop on Python 3.13 with
+uv, Ruff, and ty only, preserve backend/frontend architecture boundaries, and do not
+hand-edit generated API clients. They run targeted checks during implementation and
+reserve broad suites for explicit final gates. The reviewer requires the corresponding
+Taskfile evidence and rejects prohibited Python tooling or generated-client drift.
+
 Install a checkout as a local marketplace when you want Codex to use its skill:
 
 ~~~sh
