@@ -120,7 +120,7 @@ The tooling contract requires agents to:
 
 - read repository instructions, manifests, and Taskfile tasks before editing;
 - use Taskfile commands instead of duplicating existing raw checks;
-- use Python 3.13+, uv, Ruff, and ty only;
+- use Python 3.13 exactly for development, with uv, Ruff, and ty only;
 - reject mypy, basedpyright, and Poetry;
 - respect FastAPI router-service-repository boundaries and async SQLAlchemy;
 - support PostgreSQL and pgvector without synchronous database calls;
@@ -134,6 +134,10 @@ The tooling contract requires agents to:
 The Sol reviewer must verify the actual diff and the primary session's concrete
 Taskfile evidence. It must flag use of prohibited Python tooling or bypassing generated
 client and architecture conventions.
+
+Ubuntu's packaged Python 3.12 remains installed only as the distribution runtime for
+system utilities. User-facing `python` and `python3`, project pins, hook commands, and
+developer tooling resolve to Python 3.13. Python 3.14 is not part of the WSL toolchain.
 
 ## Safety and compatibility
 

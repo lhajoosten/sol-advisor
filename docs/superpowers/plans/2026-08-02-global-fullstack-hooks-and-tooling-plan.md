@@ -6,7 +6,7 @@
 
 **Architecture:** The active Desktop and WSL Codex configs register identical absolute WSL commands under the global hook layer. Four focused Python modules implement environment discovery, session context, command policy, and lightweight Taskfile-first quality selection. Application repositories retain only their tooling manifests and tasks; Sol Advisor becomes the versioned source for orchestration and agent tooling guidance, while machine hooks remain user-owned under `~/.codex/hooks/fullstack`.
 
-**Tech Stack:** Codex inline TOML hooks, Python 3.13-compatible standard library, Taskfile, uv, Ruff, ty, Import Linter, pnpm, Oxfmt, Oxlint, TypeScript, Docker Compose, Kubernetes client validation, Codex plugin manifests and custom-agent TOML.
+**Tech Stack:** Codex inline TOML hooks, Python 3.13 standard library, Taskfile, uv, Ruff, ty, Import Linter, pnpm, Oxfmt, Oxlint, TypeScript, Docker Compose, Kubernetes client validation, Codex plugin manifests and custom-agent TOML.
 
 ## Global Constraints
 
@@ -14,7 +14,7 @@
 - Preserve all user changes in dirty worktrees and stage or commit only explicitly owned paths.
 - Keep `approval_policy = "never"` and `sandbox_mode = "workspace-write"`; do not enable `danger-full-access`.
 - Trust only explicit repositories; never trust all of `~/github` or `~/projects`.
-- Python tooling is Python 3.13+, uv, Ruff, and ty only; never configure or invoke mypy, basedpyright, or Poetry.
+- Python development is exactly Python 3.13 with uv, Ruff, and ty only; never configure or invoke mypy, basedpyright, Poetry, Python 3.12, or Python 3.14 for project work. Preserve Ubuntu's packaged Python 3.12 only as its internal OS runtime.
 - Use existing Taskfile tasks for checks; do not duplicate a raw check when a suitable task exists.
 - PostToolUse records changes only and runs no validation.
 - Stop may run lightweight lint, format-check, typecheck, import-boundary, Compose, or Kubernetes dry-run tasks only.
@@ -168,7 +168,7 @@ def test_select_backend_tasks_never_selects_tests(tmp_path):
 Run:
 
 ```bash
-/usr/bin/python3 -m unittest discover -s /home/lhajoosten/.codex/hooks/fullstack/tests -v
+/usr/bin/python3.13 -m unittest discover -s /home/lhajoosten/.codex/hooks/fullstack/tests -v
 ```
 
 Expected: FAIL because `hooklib` and its public functions do not exist.
@@ -255,7 +255,7 @@ When no matching lightweight task exists, Stop returns model-visible context nam
 Run:
 
 ```bash
-/usr/bin/python3 -m unittest discover -s /home/lhajoosten/.codex/hooks/fullstack/tests -v
+/usr/bin/python3.13 -m unittest discover -s /home/lhajoosten/.codex/hooks/fullstack/tests -v
 find /home/lhajoosten/.codex/hooks/fullstack -maxdepth 1 -type f -name '*.py' -exec chmod 0755 {} +
 find /home/lhajoosten/.codex/hooks/fullstack -maxdepth 1 -type f -name '*.py' -printf '%m %f\n'
 ```
@@ -284,7 +284,7 @@ matcher = "^(startup|resume|clear|compact)$"
 
 [[hooks.SessionStart.hooks]]
 type = "command"
-command = '/usr/bin/python3 /home/lhajoosten/.codex/hooks/fullstack/session_context.py'
+command = '/usr/bin/python3.13 /home/lhajoosten/.codex/hooks/fullstack/session_context.py'
 timeout = 10
 additionalContextLimit = 3000
 
@@ -293,7 +293,7 @@ matcher = "^Bash$"
 
 [[hooks.PreToolUse.hooks]]
 type = "command"
-command = '/usr/bin/python3 /home/lhajoosten/.codex/hooks/fullstack/shell_guard.py'
+command = '/usr/bin/python3.13 /home/lhajoosten/.codex/hooks/fullstack/shell_guard.py'
 timeout = 5
 
 [[hooks.PostToolUse]]
@@ -301,14 +301,14 @@ matcher = "^(apply_patch|Edit|Write)$"
 
 [[hooks.PostToolUse.hooks]]
 type = "command"
-command = '/usr/bin/python3 /home/lhajoosten/.codex/hooks/fullstack/quality_gate.py post-tool'
+command = '/usr/bin/python3.13 /home/lhajoosten/.codex/hooks/fullstack/quality_gate.py post-tool'
 timeout = 5
 
 [[hooks.Stop]]
 
 [[hooks.Stop.hooks]]
 type = "command"
-command = '/usr/bin/python3 /home/lhajoosten/.codex/hooks/fullstack/quality_gate.py stop'
+command = '/usr/bin/python3.13 /home/lhajoosten/.codex/hooks/fullstack/quality_gate.py stop'
 timeout = 300
 ```
 
