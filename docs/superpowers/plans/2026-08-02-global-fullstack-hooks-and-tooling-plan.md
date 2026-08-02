@@ -504,15 +504,16 @@ git commit -m "feat(ci): align Sol Advisor with fullstack tooling"
 
 ---
 
-### Task 7: Switch both Codex homes to the durable local Sol Advisor marketplace
+### Task 7: Make WSL the authoritative Sol Advisor and tooling source
 
 **Files:**
-- Modify both global configs through the Codex plugin CLI.
-- Update installed plugin caches and custom-agent templates for both Codex homes.
+- Modify the WSL marketplace through the Codex plugin CLI.
+- Let the Desktop plugin registration consume the same WSL marketplace source when required by the app.
+- Keep custom-agent templates only in the WSL Codex home.
 
 **Interfaces:**
 - Consumes local fork version 0.3.0.
-- Produces enabled `sol-advisor@sol-advisor` for Desktop and WSL with exact companion templates.
+- Produces enabled `sol-advisor@sol-advisor` from the WSL checkout without a second source tree or Windows agent-template set.
 
 - [ ] **Step 1: Remove the old WSL marketplace and add the local path**
 
@@ -526,7 +527,7 @@ CODEX_HOME=/home/lhajoosten/.codex codex plugin add sol-advisor@sol-advisor
 
 Expected: source type becomes local and resolves to the durable fork.
 
-- [ ] **Step 2: Add and install the local marketplace for Desktop**
+- [ ] **Step 2: Point the Desktop plugin registration at the WSL marketplace**
 
 Run with explicit Desktop home:
 
@@ -537,15 +538,15 @@ CODEX_HOME=/mnt/c/Users/lhajo/.codex codex plugin add sol-advisor@sol-advisor
 
 Expected: Desktop lists the local marketplace and enabled plugin.
 
-- [ ] **Step 3: Install exact companion templates into both agent directories**
+- [ ] **Step 3: Install exact companion templates only in WSL**
 
-Run `install-agents.sh --target-dir` for `/home/lhajoosten/.codex/agents` and `/mnt/c/Users/lhajo/.codex/agents`. If an existing differing role file is found, back it up and inspect the diff before deliberately replacing it; never force through the installer.
+Run `install-agents.sh --target-dir /home/lhajoosten/.codex/agents`. If an existing differing role file is found, back it up and inspect the diff before deliberately replacing it; never force through the installer. Do not create `/mnt/c/Users/lhajo/.codex/agents` copies; the WSL runtime owns custom agents.
 
 - [ ] **Step 4: Verify plugin and templates**
 
-Run `codex plugin list`, marketplace list, and `install-agents.sh --check` for both target directories.
+Run `codex plugin list` for each registry, marketplace list, and `install-agents.sh --check` for the WSL target directory. Confirm every Sol Advisor source path resolves beneath `/home/lhajoosten/projects/sol-advisor`.
 
-Expected: plugin version 0.3.0 and byte-exact templates in both homes. A new Codex task is required before new custom-agent definitions are visible.
+Expected: plugin version 0.3.0 in both registries when the Desktop registry is required, one byte-exact WSL template set, and no Windows template duplicate. A new Codex task is required before new custom-agent definitions are visible.
 
 ---
 
@@ -611,7 +612,7 @@ Code Atlas: lint, format check, and ty through Taskfile. Ragvise AI: existing ba
 
 - [ ] **Step 4: Run plugin verification and Codex diagnostics**
 
-Run all Sol Advisor validators and both-home plugin/template checks, followed by `codex doctor --summary` and `codex mcp list`.
+Run all Sol Advisor validators, both registry source checks, and the single WSL template check, followed by `codex doctor --summary` and `codex mcp list`.
 
 Expected: configs and plugin load; CodeGraph remains enabled; approval reports Never. Report transient connectivity or `TERM=dumb` separately from configuration failures.
 

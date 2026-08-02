@@ -108,6 +108,12 @@ ephemeral installed cache. Keep the upstream GitHub repository available as an
 `upstream` remote; local changes are committed only to the local fork unless the user
 later requests publication.
 
+WSL is the single source of truth for developer-owned Codex assets. The Desktop app
+may retain its required Windows-side configuration and built-in runtime plugins, but
+its Sol Advisor marketplace source and every executable hook command point into WSL.
+Install companion custom-agent templates only in `/home/lhajoosten/.codex/agents`;
+do not maintain a second template set under the Windows Codex home.
+
 Update the plugin version and these sources consistently:
 
 - Luna and Terra custom-agent developer instructions.
